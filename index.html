@@ -5,121 +5,139 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benefit Calculator 2026</title>
   <style>
+    :root {
+      --primary-blue: #003c78;
+      --accent-gold: #ffb81c;
+      --success-green: #28a745;
+      --bg-gray: #f0f2f5;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-gray);
       display: flex;
       justify-content: center;
-      padding: 20px;
+      padding: 10px;
       margin: 0;
     }
 
     .calculator-card {
       width: 100%;
-      max-width: 580px; /* ขยายความกว้างเล็กน้อยเพื่อให้ตารางไม่แน่น */
+      max-width: 500px;
       background: white;
-      border-radius: 15px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       overflow: hidden;
+      margin-top: 10px;
     }
 
     .hero {
-      position: relative;
-      height: 120px;
-      background: #003c78 linear-gradient(135deg, #003c78 0%, #0056b3 100%);
+      height: 100px;
+      background: var(--primary-blue) linear-gradient(135deg, #003c78 0%, #0056b3 100%);
       display: flex;
-      align-items: flex-end;
-      padding: 20px;
-    }
-
-    .hero-overlay {
-      background: rgba(0, 0, 0, 0.4);
-      padding: 10px 15px;
-      border-radius: 8px;
+      align-items: center;
+      padding: 0 20px;
       color: white;
-      border-left: 5px solid #ffb81c;
-      backdrop-filter: blur(5px);
     }
 
-    .hero-overlay h2 { margin: 0; font-size: 20px; }
-    .hero-overlay p { margin: 0; font-size: 12px; opacity: 0.9; }
+    .hero-text h2 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+    .hero-text p { margin: 0; font-size: 0.8rem; opacity: 0.8; }
 
-    .content { padding: 25px; }
+    .content { padding: 20px; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
+    /* ปรับปรุงการแสดงผลตารางให้รองรับมือถือ */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
-    th {
-      background-color: #003c78;
-      color: white;
-      padding: 12px 5px;
-      font-size: 10px; /* ปรับขนาดเพื่อให้รับกับชื่อหน่วยที่ยาว */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .full-width { grid-column: span 2; }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--primary-blue);
+      margin-bottom: 5px;
       text-transform: uppercase;
-      text-align: center;
-      letter-spacing: 0.5px;
     }
 
-    td {
-      padding: 10px 4px;
-      border: 1px solid #eee;
-    }
-
-    .col-media { width: 35%; }
-    
     select, input {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 12px;
+      border: 1.5px solid #dde;
+      border-radius: 10px;
+      font-size: 1rem;
       box-sizing: border-box;
-      font-size: 13px;
-      text-align: center;
+      transition: all 0.3s;
     }
 
-    select { cursor: pointer; background-color: #f9f9f9; text-align-last: center; }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0,60,120,0.1);
+    }
+
+    /* สไตล์สำหรับช่องที่แก้ไขไม่ได้ */
+    input[readonly] {
+      background-color: #f8f9fa;
+      color: #6c757d;
+      border-color: #eee;
+      cursor: not-allowed;
+    }
 
     .result-section {
-      background-color: #f8f9fa;
+      background: #f8f9fa;
       padding: 25px;
-      border-radius: 12px;
+      border-radius: 15px;
       text-align: center;
-      border: 2px solid #e9ecef;
+      border: 2px solid #eef;
     }
 
-    #selected-type-display {
-      font-size: 14px;
+    #selected-label {
+      font-size: 0.9rem;
       color: #666;
-      margin-bottom: 8px;
-      font-weight: 600;
+      margin-bottom: 10px;
     }
 
     .total-display {
-      color: #28a745;
+      color: var(--success-green);
       font-weight: 800;
-      font-size: 36px; /* ขยายขนาดตัวเลขผลลัพธ์ */
-      margin: 5px 0;
+      font-size: 2.5rem;
+      margin-bottom: 5px;
     }
 
-    .save-cost-label {
-      font-size: 16px;
-      color: #1e7e34;
-      font-weight: bold;
-      letter-spacing: 2px;
-      border-top: 1px solid #ddd;
+    .save-cost-badge {
       display: inline-block;
-      padding-top: 5px;
-      margin-top: 5px;
+      background: var(--success-green);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    .footer-text {
+    .footer {
       text-align: center;
-      font-size: 11px;
-      color: #bbb;
-      margin-top: 20px;
-      line-height: 1.5;
+      padding: 20px;
+      font-size: 0.7rem;
+      color: #aaa;
+    }
+
+    /* Media Query สำหรับมือถือหน้าจอเล็ก */
+    @media (max-width: 400px) {
+      .total-display { font-size: 2rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
     }
   </style>
 </head>
@@ -127,58 +145,63 @@
 
 <div class="calculator-card">
   <div class="hero">
-    <div class="hero-overlay">
+    <div class="hero-text">
       <h2>Benefit Calculator</h2>
-      <p>Operational Cost Saving Estimation</p>
+      <p>Operational Cost Estimation (2026)</p>
     </div>
   </div>
 
   <div class="content">
-    <table>
-      <thead>
-        <tr>
-          <th class="col-media">Media</th>
-          <th>Hours</th>
-          <th>Rate: mmscf/hrs</th>
-          <th>$mmscf</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <select id="type-select" onchange="applyPreset()">
-              <option value="">-- Select --</option>
-              <option value="gas_pacpp">Gas / PACPP</option>
-              <option value="condy">CONDY PACPP</option>
-              <option value="remote">Gas Remote Platform</option>
-            </select>
-          </td>
-          <td><input type="number" id="val-h" value="0" oninput="calculate()"></td>
-          <td><input type="number" step="0.01" id="val-r" value="0" oninput="calculate()"></td>
-          <td><input type="number" id="val-p" value="0" oninput="calculate()"></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="input-group">
+      <!-- Media Selection -->
+      <div class="full-width">
+        <label>Media Type</label>
+        <select id="type-select" onchange="applyPreset()">
+          <option value="">-- Tap to Select Media --</option>
+          <option value="gas_pacpp">Gas / PACPP</option>
+          <option value="condy">CONDY PACPP</option>
+          <option value="remote">Gas Remote Platform</option>
+        </select>
+      </div>
+
+      <!-- Hours Input -->
+      <div class="full-width">
+        <label>Hours (Manual Input)</label>
+        <input type="number" id="val-h" placeholder="Enter hours..." oninput="calculate()">
+      </div>
+
+      <!-- Read-only Fields -->
+      <div class="field-row">
+        <div>
+          <label>Rate: mmscf/hrs</label>
+          <input type="number" id="val-r" readonly value="0">
+        </div>
+        <div>
+          <label>$ per mmscf</label>
+          <input type="number" id="val-p" readonly value="0">
+        </div>
+      </div>
+    </div>
 
     <div class="result-section">
-      <div id="selected-type-display">Ready to Calculate</div>
+      <div id="selected-label">Please select media type above</div>
       <div class="total-display" id="grand-total">$0.00</div>
-      <div class="save-cost-label">SAVE COST</div>
+      <div class="save-cost-badge">SAVE COST</div>
     </div>
+  </div>
 
-    <div class="footer-text">
-      © Chevron — Internal Use Only<br>
-      Automated Estimation Tool | Updated 2026
-    </div>
+  <div class="footer">
+    © CHEVRON — INTERNAL USE ONLY<br>
+    Optimized for Mobile Devices
   </div>
 </div>
 
 <script>
-  // ข้อมูล Preset
+  // ข้อมูลต้นทุนคงที่ (Fixed Rates)
   const presets = {
-    gas_pacpp: { label: "Gas / PACPP", hours: 1, rate: 9.17, price: 6000 },
-    condy:     { label: "CONDY PACPP", hours: 1, rate: 396,  price: 60 },
-    remote:    { label: "Gas Remote Platform", hours: 5, rate: 0.21, price: 6000 }
+    gas_pacpp: { label: "Gas / PACPP", rate: 9.17, price: 6000 },
+    condy:     { label: "CONDY PACPP", rate: 396,  price: 60 },
+    remote:    { label: "Gas Remote Platform", rate: 0.21, price: 6000 }
   };
 
   function applyPreset() {
@@ -186,12 +209,13 @@
     const data = presets[select.value];
     
     if (data) {
-      document.getElementById('val-h').value = data.hours;
       document.getElementById('val-r').value = data.rate;
       document.getElementById('val-p').value = data.price;
-      document.getElementById('selected-type-display').innerText = data.label;
+      document.getElementById('selected-label').innerText = "Selected: " + data.label;
     } else {
-      document.getElementById('selected-type-display').innerText = "Manual Input Mode";
+      document.getElementById('val-r').value = 0;
+      document.getElementById('val-p').value = 0;
+      document.getElementById('selected-label').innerText = "Please select media type above";
     }
     calculate(); 
   }
